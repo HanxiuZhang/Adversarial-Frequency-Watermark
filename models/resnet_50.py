@@ -6,7 +6,7 @@ from torchvision.models.resnet import Bottleneck
 import torchvision.transforms as transforms
 class ResNet_with_trans(ResNet):
     def forward(self, x: Tensor) -> Tensor:
-        x = transforms.Resize([256,256])(x)
+        x = transforms.Resize([224,224])(x)
         x = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(x)
         return self._forward_impl(x)
 
