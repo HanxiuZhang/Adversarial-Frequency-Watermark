@@ -1,4 +1,3 @@
-from mimetypes import init
 from torchvision.models import AlexNet
 from torchvision import transforms
 import torch
@@ -12,11 +11,12 @@ class AlexNet_with_trans(AlexNet):
         x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
+
 from typing import Optional, Any
 from torchvision.models.alexnet import AlexNet_Weights
 from torchvision.models._utils import _ovewrite_named_param
 
-def get_alexnet(*, weights: Optional[AlexNet_Weights] = None, progress: bool = True, **kwargs: Any) -> AlexNet:
+def alexnet(*, weights: Optional[AlexNet_Weights] = None, progress: bool = True, **kwargs: Any) -> AlexNet:
     weights = AlexNet_Weights.verify(weights)
 
     if weights is not None:
