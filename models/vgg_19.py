@@ -2,9 +2,9 @@ from torchvision.models import VGG
 from torchvision import transforms
 import torch
 from torch import nn
-from typing import Union, List, Dict, Any, Optional, cast
+from typing import Union, List, Any, Optional, cast
 from torchvision.models._utils import _ovewrite_named_param
-from torchvision import VGG19_Weights
+from torchvision.models.vgg import VGG19_Weights
 
 def VGG_with_trans(VGG):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
