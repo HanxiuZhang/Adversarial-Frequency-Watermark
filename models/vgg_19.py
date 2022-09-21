@@ -2,8 +2,7 @@ from torchvision.models import VGG
 from torchvision import transforms
 import torch
 from torch import nn
-from typing import Union, List, Any, Optional, cast
-from torchvision.models._utils import _ovewrite_named_param
+from typing import Union, List, Any,  cast
 from torchvision.models.vgg import VGG19_Weights
 
 class VGG_with_trans(VGG):
