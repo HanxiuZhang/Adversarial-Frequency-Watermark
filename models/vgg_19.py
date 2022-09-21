@@ -48,7 +48,7 @@ def vgg19(*, weights: Optional[VGG19_Weights] = None, progress: bool = True, **k
         model.load_state_dict(weights.get_state_dict(progress=progress))
     return model
 
-def vgg19_in(**kwargs: Any) -> VGG:
+def vgg19_in(**kwargs: Any) -> VGG_with_trans:
     weights = VGG19_Weights.IMAGENET1K_V1
     weights = VGG19_Weights.verify(weights)
     cfgs_cfg = [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"]
@@ -56,7 +56,7 @@ def vgg19_in(**kwargs: Any) -> VGG:
     model.load_state_dict(weights.get_state_dict(progress=True))
     return model
 
-def vgg19_cifar(**kwargs: Any) -> VGG:
+def vgg19_cifar(**kwargs: Any) -> VGG_with_trans:
     cfgs_cfg = [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"]
     # model = VGG_with_trans(features=make_layers(cfgs_cfg, batch_norm=False), num_classes=10,**kwargs)
     model = VGG_with_trans(features=make_layers(cfgs_cfg, batch_norm=False), num_classes=10,**kwargs)
