@@ -1,7 +1,6 @@
 from torch import Tensor
 from torchvision.models.resnet import ResNet
-from torch import nn
-from typing import Optional, Any
+from typing import Any
 from torchvision.models.resnet import Bottleneck
 import torchvision.transforms as transforms
 class ResNet_with_trans(ResNet):
@@ -11,19 +10,18 @@ class ResNet_with_trans(ResNet):
         return self._forward_impl(x)
 
 from torchvision.models.resnet import ResNet50_Weights
-from torchvision.models._utils import _ovewrite_named_param
-def resnet_50(*, weights: Optional[ResNet50_Weights] = None, progress: bool = True, **kwargs: Any) -> ResNet:
+
+def resnet50_IN(**kwargs: Any) -> ResNet_with_trans:
+    weights = ResNet50_Weights.IMAGENET1K_V1
     weights = ResNet50_Weights.verify(weights)
-    # model = _resnet(Bottleneck, [3, 4, 6, 3], weights, progress, **kwargs)
     block = Bottleneck
     layers = [3, 4, 6, 3]
-
-    if weights is not None:
-        _ovewrite_named_param(kwargs, "num_classes", len(weights.meta["categories"]))
-
     model = ResNet_with_trans(block, layers, **kwargs)
+    model.load_state_dict(weights.get_state_dict(progress=True))
+    return model
 
-    if weights is not None:
-        model.load_state_dict(weights.get_state_dict(progress=progress))
-    
+def resnet50_cifar(**kwargs) -> ResNet_with_trans:
+    block = Bottleneck
+    layers = [3, 4, 6, 3]
+    model = ResNet_with_trans(block, layers, num_classes=10, **kwargs)
     return model
