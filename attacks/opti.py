@@ -1,6 +1,7 @@
 from torch import norm
 import torch
 import sys
+import torch.nn.functional as F
 sys.path.append('../watermark/')
 from dct_wm import *
 from tqdm import tqdm
