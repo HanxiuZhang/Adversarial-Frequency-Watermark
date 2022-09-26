@@ -33,13 +33,13 @@ def block_idct(bk,block_size=8):
     return torch.from_numpy(img_idct).cuda()
 
 def dct_tensor(img,block_size=8):
-    img = img.cpu().numpy()
-    if img.ndim == 2:
-        return block_dct(img,block_size)
-    elif img.shape[0] == 1:
-        return block_dct(img[0,...],block_size)
+    img_np = img.detach().cpu().numpy()
+    if img_np.ndim == 2:
+        return block_dct(img_np,block_size)
+    elif img_np.shape[0] == 1:
+        return block_dct(img_np[0,...],block_size)
     else:
-        return torch.stack((block_dct(img[0,...],block_size),block_dct(img[1,...],block_size),block_dct(img[2,...],block_size)),dim=0)
+        return torch.stack((block_dct(img_np[0,...],block_size),block_dct(img_np[1,...],block_size),block_dct(img_np[2,...],block_size)),dim=0)
 
 def idct_tensor(img,block_size=8):
     img = img.cpu().numpy()

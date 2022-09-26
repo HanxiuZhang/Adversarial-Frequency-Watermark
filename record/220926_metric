@@ -3,9 +3,8 @@
 - label
 - predicted_label_original
 - perd_label
-- confidence
 
 # metrics to be recorded:
 - l2 distance
-- psnr
-- ssim
+
+index, label, predict_label, perd_predict_label, wm_l2
