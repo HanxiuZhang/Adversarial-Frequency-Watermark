@@ -10,7 +10,7 @@ from utils import *
 def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8 ) -> Tensor:
     wmed_img = embed_wm(img,wm,alpha,block_size)
     loss = nn.CrossEntropyLoss()
-    wmed_img = wmed_img.unsqueeze(0).float()
+    wmed_img = wmed_img.unsqueeze(0)
     wmed_img.requires_grad = True
     outputs = model(wmed_img)
     cost = loss(outputs,label)
@@ -22,7 +22,7 @@ def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:
 def fgsm_wm(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8 ) -> Tensor:
     wmed_img = embed_wm(img,wm,alpha,block_size)
     loss = nn.CrossEntropyLoss()
-    wmed_img = wmed_img.unsqueeze(0).float()
+    wmed_img = wmed_img.unsqueeze(0)
     wmed_img.requires_grad = True
     outputs = model(wmed_img)
     cost = loss(outputs,label)

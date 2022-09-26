@@ -33,3 +33,9 @@ def pltshow(img,gray=False):
         plt.imshow(img,cmap='gray')
     else:
         plt.imshow(img)
+
+def psnr(img_origin: Tensor, img_perd: Tensor) -> float:
+    pass
+
+def ssim(img_origin: Tensor, img_perd: Tensor) -> float:
+    pass
