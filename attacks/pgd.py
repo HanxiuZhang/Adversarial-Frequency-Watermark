@@ -21,7 +21,7 @@ def pgd_direct(img: Tensor, label: Tensor, wm: Tensor,
         outputs = model(adv_img)
         cost = loss(outputs,label)
         grad = torch.autograd.grad(cost,adv_img,retain_graph=False,create_graph=False)[0]
-        adv_image = adv_img.detch() + beta*grad.sign()
+        adv_image = adv_img.detach() + beta*grad.sign()
         delta = torch.clamp(adv_image - wmed_img, min=-eps, max=eps)
         adv_image = torch.clamp(adv_image+delta,min=0,max=1).detach()
     adv_image = adv_image.squeeze(0)
