@@ -45,13 +45,15 @@ def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,
     cost = loss(outputs,label)
     grad = torch.autograd.grad(cost,wmed_img,retain_graph=False,create_graph=False)[0]
     per = grad.sign().squeeze(0)
-    wm_perd = wm_add_per(img, wm, per, alpha, beta, block_size)
+    dct_per = dct_tensor(per,block_size)
+    per_on_wm = (beta/alpha) * dct_per
+    wm_perd = (wm + per_on_wm).clip(0,1)
     wmed = embed_wm(img,wm_perd,alpha,block_size)
     idct_wm = idct_tensor(wm)
-    dct_per = dct_tensor(per)
+    
     # wm_res = wm_perd
     wmed_res = wmed
-    for n in range(N):
+    for _ in range(N):
         alpha_new = alpha_update(alpha,beta,l1,l2,s_a,idct_wm,per,dct_per)
         beta_new = beta_update(alpha,beta,l1,l2,s_b,idct_wm,per,dct_per)
         wm_perturbed = (wm + (beta_new/alpha_new)*dct_per).clip(0,1)

@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 sys.path.append('../watermark/')
 from dct_wm import *
 
-# add perturbation to img through block-dct watermark
-def wm_add_per(img: Tensor, wm: Tensor, per:Tensor, alpha: float, beta: float, block_size: int) -> Tensor:
-    per_on_wm = (beta/alpha) * dct_tensor(per,block_size)
-    wm_perd = (wm + per_on_wm).clip(0,1)
-    return wm_perd
+# # add perturbation to img through block-dct watermark
+# def wm_add_per(img: Tensor, wm: Tensor, per:Tensor, alpha: float, beta: float, block_size: int) -> Tensor:
+#     per_on_wm = (beta/alpha) * dct_tensor(per,block_size)
+#     wm_perd = (wm + per_on_wm).clip(0,1)
+#     return wm_perd
 
 # add border to image so that it can be divided perfectly with block_size
 def addborder(img,block_size=8):
