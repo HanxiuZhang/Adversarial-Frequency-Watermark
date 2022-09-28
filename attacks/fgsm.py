@@ -21,22 +21,11 @@ def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:
     adv_image = torch.clamp(adv_image,min=0,max=1).squeeze(0)
     return adv_image
 
-# def fgsm_wm(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8 ) -> Tensor:
-#     wmed_img = embed_wm(img,wm,alpha,block_size)
-#     loss = nn.CrossEntropyLoss()
-#     wmed_img = wmed_img.unsqueeze(0)
-#     wmed_img.requires_grad = True
-#     outputs = model(wmed_img)
-#     cost = loss(outputs,label)
-#     grad = torch.autograd.grad(cost,wmed_img,retain_graph=False,create_graph=False)[0]
-#     per = grad.sign().squeeze(0)
-#     wm_perd = wm_add_per(img, wm, per, alpha, beta, block_size)
-#     adv_image = embed_wm(img,wm_perd,alpha,block_size)
-#     return adv_image
-
+# need to return alpha/extracted watermark!!!
 def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, 
                 alpha:float, beta: float,block_size: int, 
-                N: int, l1: float, l2: float, s_a: float, s_b: float) -> Tensor:
+                N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float) -> Tensor:
+    # Transfer the perturbation to the watermark
     wmed_img = embed_wm(img,wm,alpha,block_size)
     loss = nn.CrossEntropyLoss()
     wmed_img = wmed_img.unsqueeze(0)
@@ -49,9 +38,17 @@ def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,
     per_on_wm = (beta/alpha) * dct_per
     wm_perd = (wm + per_on_wm).clip(0,1)
     wmed = embed_wm(img,wm_perd,alpha,block_size)
-    idct_wm = idct_tensor(wm)
-    
-    # wm_res = wm_perd
+    # If attack unsuccessfully after transfer, change beta to the maximum
+    if(check_out(model,wmed,label)):
+        per_on_wm = (beta_max/alpha) * dct_per
+        wm_perd = (wm + per_on_wm).clip(0,1)
+        wmed = embed_wm(img,wm_perd,alpha,block_size)
+        # If still unsuccessfully, recover the watermark as clean
+        if(check_out(model,wmed,label)):
+            wmed_res = wmed_img.clone().detach()
+            wm_extracted = extract_wm(img,wmed_res,alpha,block_size)
+            return wmed_res,wm_extracted
+    idct_wm = idct_tensor(wm)   
     wmed_res = wmed
     for _ in range(N):
         alpha_new = alpha_update(alpha,beta,l1,l2,s_a,idct_wm,per,dct_per)
@@ -59,11 +56,13 @@ def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,
         wm_perturbed = (wm + (beta_new/alpha_new)*dct_per).clip(0,1)
         wmed = embed_wm(img,wm_perturbed,alpha_new)
         if check_out(model,wmed,label):
-            return wmed_res
+            wm_extracted = extract_wm(img,wmed_res,alpha,block_size)
+            return wmed_res, wm_extracted
         else:
             alpha = alpha_new
             beta = beta_new
             wmed_res = wmed
             # print('alpha:{},beta:{}'.format(alpha,beta))
-    return wmed_res
+    wm_extracted = extract_wm(img,wmed_res,alpha,block_size)
+    return wmed_res, wm_extracted
     

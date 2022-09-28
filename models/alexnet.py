@@ -17,7 +17,7 @@ from typing import Optional, Any
 from torchvision.models.alexnet import AlexNet_Weights
 from torchvision.models._utils import _ovewrite_named_param
 
-def alexnet_in(**kwargs: Any) -> AlexNet_with_trans:
+def alexnet_IN(**kwargs: Any) -> AlexNet_with_trans:
     weights = AlexNet_Weights.IMAGENET1K_V1
     weights = AlexNet_Weights.verify(weights)
     _ovewrite_named_param(kwargs, "num_classes", len(weights.meta["categories"]))

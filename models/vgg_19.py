@@ -32,7 +32,7 @@ def make_layers(cfg: List[Union[str, int]], batch_norm: bool = False) -> nn.Sequ
             in_channels = v
     return nn.Sequential(*layers)
 
-def vgg19_in(**kwargs: Any) -> VGG_with_trans:
+def vgg19_IN(**kwargs: Any) -> VGG_with_trans:
     weights = VGG19_Weights.IMAGENET1K_V1
     weights = VGG19_Weights.verify(weights)
     cfgs_cfg = [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"]
