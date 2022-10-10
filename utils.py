@@ -25,7 +25,7 @@ def pltshow(img: Tensor, gray: bool=False) -> None:
     Show Tensor as image
     '''
     img = transforms.ToPILImage()(img)
-    plt.figure(figsize=(2,2))
+    plt.figure(figsize=(5,5))
     plt.axis('off')
     if(gray):
         plt.imshow(img,cmap='gray')
