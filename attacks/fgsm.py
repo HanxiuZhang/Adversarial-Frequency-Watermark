@@ -1,6 +1,6 @@
 # from torchattacks import FGSM
 import torch
-from torch import Tensor, alias_copy
+from torch import Tensor
 from torch import nn
 import sys
 sys.path.append('../watermark/')

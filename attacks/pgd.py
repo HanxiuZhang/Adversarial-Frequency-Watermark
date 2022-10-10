@@ -1,3 +1,7 @@
+'''
+Abandoned
+2022.10.10
+'''
 from torchattacks import PGD
 import torch
 from torch import Tensor
