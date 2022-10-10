@@ -3,29 +3,27 @@ import sys
 import cv2
 from torchvision import transforms
 import matplotlib.pyplot as plt
+from torch.nn import ReplicationPad2d as pad
 
 sys.path.append('../watermark/')
 from dct_wm import *
 
-# # add perturbation to img through block-dct watermark
-# def wm_add_per(img: Tensor, wm: Tensor, per:Tensor, alpha: float, beta: float, block_size: int) -> Tensor:
-#     per_on_wm = (beta/alpha) * dct_tensor(per,block_size)
-#     wm_perd = (wm + per_on_wm).clip(0,1)
-#     return wm_perd
-
-# add border to image so that it can be divided perfectly with block_size
-def addborder(img,block_size=8):
-    diff_x = img.shape[0] % block_size
-    diff_y = img.shape[1] % block_size
-    if (diff_x==0 and diff_y==0):
-        return img
-    img = cv2.copyMakeBorder(img,
-              0,(block_size-diff_x),
-              0,(block_size-diff_y),
-              cv2.BORDER_REPLICATE)
+def addborder(img:Tensor, block_size: int=8) -> Tensor:
+    r'''
+    Add border to an image so that it can be appropriately divided into blocks
+    '''
+    diff_x = img.size()[2] % block_size
+    diff_y = img.size()[1] % block_size
+    if (diff_x != 0):
+        img = pad((block_size-diff_x,0,0,0))(img)
+    if (diff_y != 0):
+        img = pad((0,0,block_size-diff_y,0))(img)
     return img
 
-def pltshow(img,gray=False):
+def pltshow(img: Tensor, gray: bool=False) -> None:
+    r'''
+    Show Tensor as image
+    '''
     img = transforms.ToPILImage()(img)
     plt.figure(figsize=(2,2))
     plt.axis('off')
@@ -33,9 +31,3 @@ def pltshow(img,gray=False):
         plt.imshow(img,cmap='gray')
     else:
         plt.imshow(img)
-
-def psnr(img_origin: Tensor, img_perd: Tensor) -> float:
-    pass
-
-def ssim(img_origin: Tensor, img_perd: Tensor) -> float:
-    pass
