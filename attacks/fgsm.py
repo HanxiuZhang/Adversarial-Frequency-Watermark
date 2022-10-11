@@ -42,17 +42,16 @@ def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,
     wmed = embed_wm(img,wm_perd,alpha,block_size)
     # If attack unsuccessfully after transfer, change beta to the maximum
     if(check_out(model,wmed,label)):
-        per_on_wm = (beta_max/alpha) * dct_per
+        # alpha = alpha_max
+        beta = beta_max
+        per_on_wm = (beta/alpha) * dct_per
         wm_perd = (wm + per_on_wm).clip(0,1)
-        wmed = embed_wm(img,wm_perd,alpha_max,block_size)
+        wmed = embed_wm(img,wm_perd,alpha,block_size)
         # If still unsuccessfully, recover the watermark as clean
         if(check_out(model,wmed,label)):
             wmed_res = wmed_img.clone().detach().squeeze(0)
             wm_extracted = extract_wm(img,wmed_res,alpha,block_size)
-            return wmed_res,wm_extracted, alpha, beta
-        else:
-            alpha = alpha_max
-            beta = beta_max
+            return wmed_res,wm_extracted, alpha_in, beta_in
     idct_wm = idct_tensor(wm)   
     wmed_res = wmed
     for _ in range(N):
