@@ -42,7 +42,7 @@ def dct_tensor(img,block_size=8):
         return torch.stack((block_dct(img_np[0,...],block_size),block_dct(img_np[1,...],block_size),block_dct(img_np[2,...],block_size)),dim=0)
 
 def idct_tensor(img,block_size=8):
-    img = img.cpu().numpy()
+    img = img.detach().cpu().numpy()
     if img.ndim == 2:
         return block_idct(img,block_size)
     elif img.shape[0] == 1:

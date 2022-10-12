@@ -31,7 +31,7 @@ def fgm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:f
 
 def fgm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, 
                 alpha:float, beta: float,block_size: int, 
-                N: int, l1: float, l2: float, s_a: float, s_b: float, alpha_max: float, beta_max: float) -> Tensor:
+                N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float) -> Tensor:
     r'''
     Transfer the FGM perturbation to the watermark
     Optimize alpha and beta with gradient descent
@@ -57,7 +57,7 @@ def fgm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,
     wmed = embed_wm(img,wm_perd,alpha,block_size)
     # If attack unsuccessfully after transfer, change beta to the maximum
     if(check_out(model,wmed,label)):
-        alpha = alpha_max
+        # alpha = alpha_max
         beta = beta_max
         per_on_wm = (beta_max/alpha) * dct_per
         wm_perd = (wm + per_on_wm).clip(0,1)

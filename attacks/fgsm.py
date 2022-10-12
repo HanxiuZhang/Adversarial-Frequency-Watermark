@@ -24,7 +24,7 @@ def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:
 # need to return alpha/extracted watermark!!!
 def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, 
                 alpha:float, beta: float,block_size: int, 
-                N: int, l1: float, l2: float, s_a: float, s_b: float, alpha_max: float, beta_max: float) -> Tensor:
+                N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float) -> Tensor:
     alpha_in = alpha
     beta_in = beta
     # Transfer the perturbation to the watermark
