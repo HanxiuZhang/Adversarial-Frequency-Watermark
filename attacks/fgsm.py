@@ -9,7 +9,10 @@ from utils import *
 sys.path.append('../attacks/')
 from opti import *
 
-def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8 ) -> Tensor:
+def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8,*args) -> Tensor:
+    r'''
+    Pipline method to 1) embed digital watermark 2) add perturbation in FGSM way
+    '''
     wmed_img = embed_wm(img,wm,alpha,block_size)
     loss = nn.CrossEntropyLoss()
     wmed_img = wmed_img.unsqueeze(0)
@@ -24,7 +27,11 @@ def fgsm_direct(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:
 # need to return alpha/extracted watermark!!!
 def fgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, 
                 alpha:float, beta: float,block_size: int, 
-                N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float) -> Tensor:
+                N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float,*args):
+    r'''
+    Proposed method to 1) embed watermark 2) calculate perturbation 3) transfer to watermark 4) re-embed perturbated watermark
+    in FGSM way
+    '''
     alpha_in = alpha
     beta_in = beta
     # Transfer the perturbation to the watermark
