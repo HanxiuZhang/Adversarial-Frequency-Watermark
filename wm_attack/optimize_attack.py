@@ -31,7 +31,7 @@ def attack_and_record(filename: str,model: nn.Module, imgs:datasets, wm_origin: 
             file.write('{},{},{},{},{},{},{},{}\n'.format(i,imgs[i][1],pred_label,perd_label,wm_psnr,img_psnr,a_res,b_res))  # type: ignore
 
 def check_and_record_result(filename,record_filename):
-    cols = ['index','label','pred_label','perd_label','wm_l2','img_l2','alpha','beta']
+    cols = ['index','label','pred_label','perd_label','wm_psnr','img_psnr','alpha','beta']
     res = pd.read_csv(filename,names=cols,header=None)
     fool_rate = (res['perd_label'] != res['pred_label']).sum()/res['index'].count()
     wm_psnr = res['wm_psnr'].sum() / res['wm_psnr'].count()

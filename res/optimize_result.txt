@@ -1,0 +1,1 @@
+../history_log/model_alexnet_atk_fgsm_opt_optimize_alpha_0.1_beta_0.0392156862745098_N_20_l1_0.01_l2_0.01_s_a_0.0005_s_b_0.0001_beta_max_0.0784313725490196.txt,0.9968,18.358827885769205,36.4428229375437
