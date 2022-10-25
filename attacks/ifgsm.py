@@ -8,7 +8,7 @@ from utils import *
 sys.path.append('../attacks/')
 from opti import *
 
-def ifgsm_pipeline(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8, steps: int=10, eps: float=10/255) -> Tensor:
+def ifgsm_pipeline(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alpha:float, beta: float,block_size: int=8, steps: int=10, eps: float=10/255, **args) -> Tensor:
     r'''
     Pipline method to 1) embed digital watermark 2) add perturbation in PGD(iterative-FGSM) way
     '''
@@ -17,7 +17,7 @@ def ifgsm_pipeline(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alp
     # Calculate perturbation
     adv_img = wmed_img.detach().unsqueeze(0)
     images = adv_img.detach()
-    loss = nn.CrossEntropyLoss()
+    loss = nn.CrossEntropyLoss()  # type: ignore
     for _ in range(steps):
         adv_img.requires_grad = True
         outputs = model(adv_img)
@@ -31,10 +31,10 @@ def ifgsm_pipeline(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, alp
         adv_img = torch.clamp(images + delta, min=0, max=1).detach()
     return adv_img.detach().squeeze(0)
 
-def ifgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module, 
+def ifgsm_wm_opti(img: Tensor, label: Tensor, wm: Tensor, model: nn.Module,   # type: ignore
                 alpha:float, beta: float,block_size: int, 
                 N: int, l1: float, l2: float, s_a: float, s_b: float, beta_max: float,
-                steps: int, eps:float,):
+                steps: int, eps:float,**args):
     r'''
     Proposed method to 1) embed watermark 2) calculate perturbation 3) transfer to watermark 4) re-embed perturbated watermark
     in PGD(iterative-FGSM) way

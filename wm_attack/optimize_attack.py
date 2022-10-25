@@ -7,7 +7,8 @@ from torchvision import transforms, datasets
 from tqdm import tqdm
 import cv2
 import pandas as pd
-from utils import *
+from atk_utils import *
+
 
 
 def attack_and_record(filename: str,model: nn.Module, imgs:datasets, wm_origin: Tensor,  # type: ignore
@@ -23,7 +24,7 @@ def attack_and_record(filename: str,model: nn.Module, imgs:datasets, wm_origin: 
             label = torch.tensor([pred_label]).cuda()
             atk_method = get_attack_method(atk_name)
             perd_img,wm_extracted,a_res,b_res = \
-                atk_method(img,label,wm,model,alpha,beta,block_size,N,l1,l2,s_a,s_b,beta_max,steps,eps)
+                atk_method(img,label,wm,model,alpha,beta,block_size,N=N,l1=l1,l2=l2,s_a=s_a,s_b=s_b,beta_max=beta_max,steps=steps,eps=eps)
             res = model(perd_img.unsqueeze(0))
             perd_label = res.argmax().item()
             wm_psnr = psnr(wm,wm_extracted)
@@ -44,23 +45,27 @@ def check_and_record_result(filename,record_filename):
 
 if(__name__ == '__main__'):
     alpha = 0.1
-    beta = 10/255
+    # beta = 1
+    # beta_max = 1.5
+    beta = 2/255
+    beta_max = 8/255
     N = 20
     l1 = 0.01
     l2 = 0.01
     s_a = 0.0005
-    s_b = 0.0001
-    beta_max = 20/255
+    s_b = 0.0001 
     steps = 10
-    eps = 10/255
+    eps = 8/255
     imgs = datasets.ImageFolder('/home/hancy/dataset/imagenet5000/',transform=transforms.ToTensor())   # type: ignore
     wm_origin = cv2.imread('../img/logo.jpg')
     wm_origin = cv2.cvtColor(wm_origin,cv2.COLOR_BGR2RGB)
     wm_origin = transforms.ToTensor()(wm_origin).cuda()  # type: ignore
-    for atk_name in ['fgsm_opt','ifgsm_opt']:
-        for model_name in ['alexnet','vgg19','densenet201','mobilenetv2','resnet50']:
+    # for atk_name in ['fgsm_opt','fgm_opt','ifgsm_opt']:
+    for atk_name in ['fgsm_opt']:
+        for model_name in ['vgg19','resnet50','alexnet','densenet201','mobilenetv2']:
             model = get_model(model_name)
             filename = "../res/model_{}_atk_{}_optimize_alpha_{}_beta_{}_N_{}_l1_{}_l2_{}_s_a_{}_s_b_{}_beta_max_{}.txt".format(model_name,atk_name,alpha,beta,N,l1,l2,s_a,s_b,beta_max)
-            attack_and_record(filename,model,imgs,wm_origin,alpha=alpha,beta=beta,atk_name=atk_name)  # type: ignore
-            record_filename = '../res/pipline_result.txt'
+            attack_and_record(filename,model,imgs,wm_origin,alpha=alpha,beta=beta,atk_name=atk_name,  # type: ignore
+                               N=N,l1=l1,l2=l2,s_a=s_a,s_b=s_b,beta_max=beta_max,steps=steps,eps=eps )
+            record_filename = '../res/optimize_result.txt'
             check_and_record_result(filename,record_filename)
