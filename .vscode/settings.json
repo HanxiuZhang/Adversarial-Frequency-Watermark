@@ -3,6 +3,7 @@
     "python.analysis.extraPaths": [
         "./watermark",
         "./models",
-        "./attacks"
+        "./attacks",
+        "./wm_attack"
     ]
 }

@@ -1,9 +1,9 @@
+from typing import Tuple
 from torch import Tensor
 import sys
 from torchvision import transforms
 import matplotlib.pyplot as plt
-from torch.nn import ReplicationPad2d as pad
-
+from torch.nn import ReplicationPad2d as pad, Module, functional as F
 
 sys.path.append('../watermark/')
 from dct_wm import *
@@ -31,3 +31,10 @@ def pltshow(img: Tensor, gray: bool=False) -> None:
         plt.imshow(img,cmap='gray')
     else:
         plt.imshow(img)
+
+def check_predict(model: Module,img: Tensor) -> Tuple[int, float]: 
+    img = torch.unsqueeze(img,0).type(torch.FloatTensor).cuda()    # type: ignore
+    out = (F.softmax(model(img),dim=1))
+    predict = out.argmax().item()
+    prob = out.squeeze(0)[predict].item()  # type: ignore
+    return predict, prob  # type: ignore

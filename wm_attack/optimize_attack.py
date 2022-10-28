@@ -49,9 +49,9 @@ if(__name__ == '__main__'):
     # beta_max = 1.5
     beta = 2/255
     beta_max = 8/255
-    N = 20
-    l1 = 0.01
-    l2 = 0.01
+    N = 30
+    l1 = 0.02
+    l2 = 0.05
     s_a = 0.0005
     s_b = 0.0001 
     steps = 10
@@ -61,7 +61,7 @@ if(__name__ == '__main__'):
     wm_origin = cv2.cvtColor(wm_origin,cv2.COLOR_BGR2RGB)
     wm_origin = transforms.ToTensor()(wm_origin).cuda()  # type: ignore
     # for atk_name in ['fgsm_opt','fgm_opt','ifgsm_opt']:
-    for atk_name in ['fgsm_opt']:
+    for atk_name in ['ifgsm_opt']:
         for model_name in ['vgg19','resnet50','alexnet','densenet201','mobilenetv2']:
             model = get_model(model_name)
             filename = "../res/model_{}_atk_{}_optimize_alpha_{}_beta_{}_N_{}_l1_{}_l2_{}_s_a_{}_s_b_{}_beta_max_{}.txt".format(model_name,atk_name,alpha,beta,N,l1,l2,s_a,s_b,beta_max)
