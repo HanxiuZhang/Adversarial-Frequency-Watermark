@@ -31,3 +31,5 @@ vgg19:0.2876,resnet50:0.1966,alexnet:0.9998,densenet201:0.1596,mobilenetv2:0.319
 vgg19:0.5204,resnet50:0.6744,alexnet:0.2672,densenet201:1.0,mobilenetv2:0.581,
 ../transfer_res/model_vgg19_atk_ifgsm_opt_transfer.txt
 vgg19:0.9976,resnet50:0.258,alexnet:0.2042,densenet201:0.1782,mobilenetv2:0.372,
+../transfer_res/model_mobilenetv2_atk_ifgsm_transfer.txt
+vgg19:0.4782,resnet50:0.3844,alexnet:0.2514,densenet201:0.3024,mobilenetv2:1.0,
