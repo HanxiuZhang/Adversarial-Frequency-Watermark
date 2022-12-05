@@ -4,6 +4,8 @@ import sys
 from torchvision import transforms
 import matplotlib.pyplot as plt
 from torch.nn import ReplicationPad2d as pad, Module, functional as F
+import math
+import pytorch_msssim
 
 sys.path.append('../watermark/')
 from dct_wm import *
@@ -38,3 +40,26 @@ def check_predict(model: Module,img: Tensor) -> Tuple[int, float]:
     predict = out.argmax().item()
     prob = out.squeeze(0)[predict].item()  # type: ignore
     return predict, prob  # type: ignore
+
+def saveTensor(img: Tensor, filename: str):
+    transforms.ToPILImage()(img).save(filename)
+
+def read_img_and_tensor(img_path: str, wm_path: str, block_size: int) -> Tuple[Tensor,Tensor]:
+    T = transforms.ToTensor()
+    img = cv2.imread('../img/beagle2.jpg')
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    img = addborder(T(img),block_size).cuda()
+    wm = cv2.imread('../img/logo.jpg')
+    wm = cv2.cvtColor(wm,cv2.COLOR_BGR2RGB)
+    wm = transforms.Resize(img.size()[-2:])(T(wm)).cuda()
+    return img, wm
+
+def psnr(img: Tensor, perd_img: Tensor) -> float:
+    mse = torch.mean((perd_img-img)**2).item()
+    psnr = 10*math.log10(1/mse)
+    return psnr
+
+def ssim(img: Tensor, perd_img: Tensor) -> float:
+    img = torch.unsqueeze(img,0).type(torch.FloatTensor).cuda()
+    perd_img = torch.unsqueeze(perd_img,0).type(torch.FloatTensor).cuda()
+    return pytorch_msssim.ssim(img, perd_img).item()

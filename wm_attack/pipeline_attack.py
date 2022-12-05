@@ -13,7 +13,6 @@ import pandas as pd
 from utils import *
 from atk_utils import *
 
-
 def attack_and_record(filename: str,model: nn.Module, imgs:datasets, wm_origin: Tensor,  # type: ignore
                         block_size: int=8, alpha: float=0.1, beta: float=10/255, atk_name: str='fgsm',eps: float = 8/255, steps: int=10):
     with open(filename,'a') as file:
