@@ -1,5 +1,5 @@
 ## A Method for Applying Gradient Attack through Frequency Domain Watermarking
-The reference code for the paper "Making Adversarial Attack Imperceptible in Frequency Domain: A Watermark-based Framework" (ICME 2023).\\
+The reference code for the paper "Making Adversarial Attack Imperceptible in Frequency Domain: A Watermark-based Framework" (ICME 2023).
 
 In the preliminary experiments, the following observations were made:
 
